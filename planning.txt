@@ -1,0 +1,38 @@
++                   Entities
++                        - User // Manager of a TaxiStop
++                        - Cars // Taxi Cars and their specs
++                        - TaxiStop // List of TaxiStops with their specs
++                        - Drivers // Drivers of the Taxis
+
+
+
+- CRUD endpoints will be defined
+       + User
+            + Register
+            + Login
+            + Update
+            + Info / Get
+            + Delete
+       - TaxiStop
+            - Register / Create
+            - Info / Get
+            - Update
+            - Delete
+       - Driver
+            - Add / Register/ Create
+            - Find / Info / Get
+            - Update
+            - Delete
+       - Car
+            - Add / Register/ Create
+            - Find / Info / Get ?
+            - Update
+            - Delete
+
+- CRUD functions will be implemented
+
+- Environment Variables will be defined and integrated
+- Authentication and Authorization will be handled
+- init.sql will be fixed
+
+
