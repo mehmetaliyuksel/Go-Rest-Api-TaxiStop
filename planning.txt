@@ -6,33 +6,37 @@
 
 
 
-- CRUD endpoints will be defined
++ CRUD endpoints will be defined
        + User
             + Register
-            + Login
+            - Login ----------->>>> Auth
             + Update
             + Info / Get
             + Delete
-       - TaxiStop
-            - Register / Create
-            - Info / Get
-            - Update
-            - Delete
-       - Driver
-            - Add / Register/ Create
-            - Find / Info / Get
-            - Update
-            - Delete
-       - Car
-            - Add / Register/ Create
-            - Find / Info / Get ?
-            - Update
-            - Delete
+       + TaxiStop
+            + Register / Create
+            + Info / Get
+            + Update
+            + Delete
+       + Driver
+            + Add / Register/ Create
+            + Find / Info / Get
+            + Update
+            + Delete
+       + Car
+            + Add / Register/ Create
+            + Find / Info / Get ?
+            + Update
+            + Delete
 
-- CRUD functions will be implemented
-
-- Environment Variables will be defined and integrated
++ CRUD functions will be implemented
+- Business logic will be implemented
 - Authentication and Authorization will be handled
+- Validation will be implemented
+- Extend middleware utility
+- Environment Variables will be defined and integrated
+- Logging will be improved
+- Swagger can be added
 - init.sql will be fixed
 
 

@@ -14,7 +14,7 @@ type UserController struct{}
 var once sync.Once
 var singletonUserControllerInstance *UserController
 
-func GetInstance() *UserController {
+func GetUserControllerInstance() *UserController {
 	once.Do(func() {
 		singletonUserControllerInstance = &UserController{}
 	})
