@@ -1,5 +1,7 @@
 package model
 
+import "golang.org/x/crypto/bcrypt"
+
 type User struct {
 	Model    `gorm:"embedded"`
 	Username string `gorm:"not null" validate:"required" json:"username"`
@@ -26,9 +28,18 @@ func (u *User) GetAll() ([]User, error) {
 	return users, nil
 }
 
-func (u *User) FindBy(id uint) (User, error) {
+func (u *User) FindById(id uint) (User, error) {
 	var user User
 	if err := db.Where("deleted = ?", false).First(&user, id).Error; err != nil {
+		return user, err
+	}
+
+	return user, nil
+}
+
+func (u *User) FindByEmail(email string) (User, error) {
+	var user User
+	if err := db.Where("deleted = ? and email = ?", false, email).First(&user).Error; err != nil {
 		return user, err
 	}
 
@@ -58,4 +69,33 @@ func (u *User) DeleteBy(id uint) error {
 		return err
 	}
 	return nil
+}
+
+func (u *User) HashPassword(password string) error {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+
+	if err != nil {
+		return err
+	}
+
+	u.Password = string(bytes)
+	return nil
+}
+func (u *User) CheckPassword(providedPassword string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(providedPassword))
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (u *User) IsExist(email string) (bool, error) {
+	var user User
+
+	if err := db.Where("email = ?", email).First(&user).Error; err != nil {
+		return false, err
+	}
+
+	return true, nil
 }

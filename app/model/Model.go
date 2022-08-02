@@ -18,7 +18,7 @@ type Model struct {
 
 //type crud interface {
 //	Create(uint) (interface{}, error)
-//	FindBy(interface{}) (interface{}, error)
+//	FindById(interface{}) (interface{}, error)
 //	GetAll() (interface{}, error)
 //	Update(interface{}) (interface{}, error)
 //	Delete(interface{}) (interface{}, error)

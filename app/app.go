@@ -1,6 +1,7 @@
 package app
 
 import (
+	"TaxiStop/app/auth"
 	"TaxiStop/app/controller"
 	"TaxiStop/app/model"
 	"fmt"
@@ -28,8 +29,11 @@ func (a *App) init() {
 
 func (a *App) run() {
 
-	router := mux.NewRouter().StrictSlash(true)
-	router.Use(middleware)
+	insecureRouter := mux.NewRouter().StrictSlash(true)
+	insecureRouter.Use(inSecureMiddleware)
+
+	secureRouter := insecureRouter.PathPrefix("").Subrouter()
+	secureRouter.Use(commonMiddleware)
 
 	userController := controller.GetUserControllerInstance()
 	taxiStopController := controller.GetTaxiStopControllerInstance()
@@ -37,44 +41,66 @@ func (a *App) run() {
 	carController := controller.GetCarControllerInstance()
 
 	// User Endpoints TODO: Add Login Endpoint
-	router.HandleFunc("/createUser", userController.RegisterUser).Methods("POST")
-	router.HandleFunc("/getUsers", userController.GetUsers).Methods("GET")
-	router.HandleFunc("/getUser/{id}", userController.GetUser).Methods("GET")
-	router.HandleFunc("/updateUser/{id}", userController.UpdateUser).Methods("PUT")
-	router.HandleFunc("/deleteUser/{id}", userController.DeleteUser).Methods("DELETE")
+	insecureRouter.HandleFunc("/createUser", userController.RegisterUser).Methods("POST")
+	secureRouter.HandleFunc("/login", userController.Login).Methods("POST")
+	secureRouter.HandleFunc("/getUsers", userController.GetUsers).Methods("GET")
+	secureRouter.HandleFunc("/getUser/{id}", userController.GetUser).Methods("GET")
+	secureRouter.HandleFunc("/updateUser/{id}", userController.UpdateUser).Methods("PUT")
+	secureRouter.HandleFunc("/deleteUser/{id}", userController.DeleteUser).Methods("DELETE")
 
 	// TaxiStop Endpoints TODO: Revision
-	router.HandleFunc("/createTaxiStop", taxiStopController.RegisterTaxiStop).Methods("POST")
-	router.HandleFunc("/getTaxiStops", taxiStopController.GetTaxiStops).Methods("GET")
-	router.HandleFunc("/getTaxiStop/{id}", taxiStopController.GetTaxiStop).Methods("GET")
-	router.HandleFunc("/updateTaxiStop/{id}", taxiStopController.UpdateTaxiStop).Methods("PUT")
-	router.HandleFunc("/deleteTaxiStop/{id}", taxiStopController.DeleteTaxiStop).Methods("DELETE")
+	secureRouter.HandleFunc("/createTaxiStop", taxiStopController.RegisterTaxiStop).Methods("POST")
+	secureRouter.HandleFunc("/getTaxiStops", taxiStopController.GetTaxiStops).Methods("GET")
+	secureRouter.HandleFunc("/getTaxiStop/{id}", taxiStopController.GetTaxiStop).Methods("GET")
+	secureRouter.HandleFunc("/updateTaxiStop/{id}", taxiStopController.UpdateTaxiStop).Methods("PUT")
+	secureRouter.HandleFunc("/deleteTaxiStop/{id}", taxiStopController.DeleteTaxiStop).Methods("DELETE")
 
 	// Driver Endpoints TODO: Revision
-	router.HandleFunc("/createDriver", driverController.RegisterDriver).Methods("POST")
-	router.HandleFunc("/getDrivers", driverController.GetDrivers).Methods("GET")
-	router.HandleFunc("/getDriver/{id}", driverController.GetDriver).Methods("GET")
-	router.HandleFunc("/updateDriver/{id}", driverController.UpdateDriver).Methods("PUT")
-	router.HandleFunc("/deleteDriver/{id}", driverController.DeleteDriver).Methods("DELETE")
+	secureRouter.HandleFunc("/createDriver", driverController.RegisterDriver).Methods("POST")
+	secureRouter.HandleFunc("/getDrivers", driverController.GetDrivers).Methods("GET")
+	secureRouter.HandleFunc("/getDriver/{id}", driverController.GetDriver).Methods("GET")
+	secureRouter.HandleFunc("/updateDriver/{id}", driverController.UpdateDriver).Methods("PUT")
+	secureRouter.HandleFunc("/deleteDriver/{id}", driverController.DeleteDriver).Methods("DELETE")
 
 	// Car Endpoints TODO: Revision
-	router.HandleFunc("/createCar", carController.RegisterCar).Methods("POST")
-	router.HandleFunc("/getCars", carController.GetCars).Methods("GET")
-	router.HandleFunc("/getCar/{id}", carController.GetCar).Methods("GET")
-	router.HandleFunc("/updateCar/{id}", carController.UpdateCar).Methods("PUT")
-	router.HandleFunc("/deleteCar/{id}", carController.DeleteCar).Methods("DELETE")
+	secureRouter.HandleFunc("/createCar", carController.RegisterCar).Methods("POST")
+	secureRouter.HandleFunc("/getCars", carController.GetCars).Methods("GET")
+	secureRouter.HandleFunc("/getCar/{id}", carController.GetCar).Methods("GET")
+	secureRouter.HandleFunc("/updateCar/{id}", carController.UpdateCar).Methods("PUT")
+	secureRouter.HandleFunc("/deleteCar/{id}", carController.DeleteCar).Methods("DELETE")
 
 	// TODO: Improve logging
 	fmt.Println("Server is Running!")
 
 	// TODO: Configure Go Routines
-	log.Fatal(http.ListenAndServe(":8000", router))
+	log.Fatal(http.ListenAndServe(":8000", insecureRouter))
 }
 
-func middleware(next http.Handler) http.Handler {
+func commonMiddleware(next http.Handler) http.Handler {
 	// TODO: Revision for improving
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		tokenString := r.Header.Get("Authorization")
+
+		if tokenString == "" {
+			http.Error(w, "Missing Token! Unauthorized!", http.StatusUnauthorized)
+			return
+		}
+
+		if err := auth.ValidateToken(tokenString); err != nil {
+			http.Error(w, "Invalid Token! Unauthorized!", http.StatusUnauthorized)
+			return
+		}
+
+		//w.Header().Add("Content-Type", "application/json")
+
+		next.ServeHTTP(w, r)
+	})
+}
+
+func inSecureMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Type", "application/json")
+
 		next.ServeHTTP(w, r)
 	})
 }
