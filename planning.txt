@@ -9,7 +9,7 @@
 + CRUD endpoints will be defined
        + User
             + Register
-            - Login ----------->>>> Auth
+            + Login ----------->>>> Auth
             + Update
             + Info / Get
             + Delete
@@ -30,8 +30,9 @@
             + Delete
 
 + CRUD functions will be implemented
+- Improve CRUD functionalities
 - Business logic will be implemented
-- Authentication and Authorization will be handled
++ Authentication and Authorization will be handled
 - Validation will be implemented
 - Extend middleware utility
 - Environment Variables will be defined and integrated

@@ -23,7 +23,15 @@ func GetDriverControllerInstance() *DriverController {
 func (tsc *DriverController) RegisterDriver(w http.ResponseWriter, r *http.Request) {
 	var driver model.Driver
 
-	err := json.NewDecoder(r.Body).Decode(&driver)
+	taxiStopId, err := strconv.Atoi(mux.Vars(r)["id"])
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	driver.TaxiStopID = uint(taxiStopId)
+
+	err = json.NewDecoder(r.Body).Decode(&driver)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)

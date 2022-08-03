@@ -49,14 +49,14 @@ func (a *App) run() {
 	secureRouter.HandleFunc("/deleteUser/{id}", userController.DeleteUser).Methods("DELETE")
 
 	// TaxiStop Endpoints TODO: Revision
-	secureRouter.HandleFunc("/createTaxiStop", taxiStopController.RegisterTaxiStop).Methods("POST")
+	secureRouter.HandleFunc("/{id}/createTaxiStop", taxiStopController.RegisterTaxiStop).Methods("POST")
 	secureRouter.HandleFunc("/getTaxiStops", taxiStopController.GetTaxiStops).Methods("GET")
 	secureRouter.HandleFunc("/getTaxiStop/{id}", taxiStopController.GetTaxiStop).Methods("GET")
 	secureRouter.HandleFunc("/updateTaxiStop/{id}", taxiStopController.UpdateTaxiStop).Methods("PUT")
 	secureRouter.HandleFunc("/deleteTaxiStop/{id}", taxiStopController.DeleteTaxiStop).Methods("DELETE")
 
 	// Driver Endpoints TODO: Revision
-	secureRouter.HandleFunc("/createDriver", driverController.RegisterDriver).Methods("POST")
+	secureRouter.HandleFunc("/{id}/createDriver", driverController.RegisterDriver).Methods("POST")
 	secureRouter.HandleFunc("/getDrivers", driverController.GetDrivers).Methods("GET")
 	secureRouter.HandleFunc("/getDriver/{id}", driverController.GetDriver).Methods("GET")
 	secureRouter.HandleFunc("/updateDriver/{id}", driverController.UpdateDriver).Methods("PUT")

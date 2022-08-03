@@ -22,8 +22,15 @@ func GetTaxiStopControllerInstance() *TaxiStopController {
 
 func (tsc *TaxiStopController) RegisterTaxiStop(w http.ResponseWriter, r *http.Request) {
 	var taxiStop model.TaxiStop
+	var user model.User
 
-	err := json.NewDecoder(r.Body).Decode(&taxiStop)
+	userId, err := strconv.Atoi(mux.Vars(r)["id"])
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = json.NewDecoder(r.Body).Decode(&taxiStop)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -31,6 +38,9 @@ func (tsc *TaxiStopController) RegisterTaxiStop(w http.ResponseWriter, r *http.R
 	}
 
 	// TODO: Validation
+
+	user, _ = user.FindById(uint(userId))
+	taxiStop.User = append(taxiStop.User, user)
 
 	if taxiStop, err = taxiStop.Create(taxiStop); err != nil {
 		http.Error(w, "Could Not Register TaxiStop!", http.StatusInternalServerError)

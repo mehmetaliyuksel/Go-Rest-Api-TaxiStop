@@ -17,7 +17,7 @@ type Driver struct {
 }
 
 func getQueryToIncreaseNumOfDriversBy(val int) string {
-	return "UPDATE taxi_stops SET number_of_drivers = number_of_drivers " + strconv.Itoa(val) + " WHERE id = ?"
+	return "UPDATE taxi_stops SET number_of_drivers = number_of_drivers " + "+ " + strconv.Itoa(val) + " WHERE id = ?"
 }
 
 func (d *Driver) AfterCreate(tx *gorm.DB) (err error) {

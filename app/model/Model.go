@@ -16,14 +16,6 @@ type Model struct {
 	DeletedAt time.Time `gorm:"not null"  json:"deleted_at"`
 }
 
-//type crud interface {
-//	Create(uint) (interface{}, error)
-//	FindById(interface{}) (interface{}, error)
-//	GetAll() (interface{}, error)
-//	Update(interface{}) (interface{}, error)
-//	Delete(interface{}) (interface{}, error)
-//}
-
 var models = []interface{}{
 	&User{},
 	&Car{},
