@@ -12,6 +12,11 @@ import (
 
 type UserController struct{}
 
+type LoginRequestModel struct {
+	Email    string `json:"Email"`
+	Password string `json:"Password"`
+}
+
 var once sync.Once
 var singletonUserControllerInstance *UserController
 
@@ -62,21 +67,22 @@ func (uc *UserController) RegisterUser(w http.ResponseWriter, r *http.Request) {
 
 func (uc *UserController) Login(w http.ResponseWriter, r *http.Request) {
 	var user model.User
+	var loginRequest LoginRequestModel
 	var tokenString string
 
-	err := json.NewDecoder(r.Body).Decode(&user)
+	err := json.NewDecoder(r.Body).Decode(&loginRequest)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	if user, err = user.FindByEmail(user.Email); err != nil {
+	if user, err = user.FindByEmail(loginRequest.Email); err != nil {
 		http.Error(w, "User does not exists!", http.StatusBadRequest)
 		return
 	}
 
-	if credentialError := user.CheckPassword(user.Password); credentialError != nil {
+	if credentialError := user.CheckPassword(loginRequest.Password); credentialError != nil {
 		http.Error(w, "Password is incorrect!", http.StatusUnauthorized)
 		return
 	}

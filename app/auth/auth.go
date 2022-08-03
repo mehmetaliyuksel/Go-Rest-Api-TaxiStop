@@ -3,6 +3,7 @@ package auth
 import (
 	"errors"
 	"github.com/golang-jwt/jwt/v4"
+	"strings"
 	"time"
 )
 
@@ -30,6 +31,8 @@ func GenerateJWT(email string, username string, id uint) (tokenString string, er
 	return
 }
 func ValidateToken(signedToken string) (err error) {
+	signedToken = strings.Split(signedToken, "Bearer ")[1]
+
 	token, err := jwt.ParseWithClaims(
 		signedToken,
 		&JWTClaim{},

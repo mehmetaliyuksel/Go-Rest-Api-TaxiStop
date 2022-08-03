@@ -42,7 +42,7 @@ func (a *App) run() {
 
 	// User Endpoints TODO: Add Login Endpoint
 	insecureRouter.HandleFunc("/createUser", userController.RegisterUser).Methods("POST")
-	secureRouter.HandleFunc("/login", userController.Login).Methods("POST")
+	insecureRouter.HandleFunc("/login", userController.Login).Methods("POST")
 	secureRouter.HandleFunc("/getUsers", userController.GetUsers).Methods("GET")
 	secureRouter.HandleFunc("/getUser/{id}", userController.GetUser).Methods("GET")
 	secureRouter.HandleFunc("/updateUser/{id}", userController.UpdateUser).Methods("PUT")
