@@ -32,6 +32,11 @@ func (cc *CarController) RegisterCar(w http.ResponseWriter, r *http.Request) {
 
 	// TODO: Validation
 
+	if model.IsExist(car) {
+		http.Error(w, "Car Already Exists!", http.StatusBadRequest)
+		return
+	}
+
 	if car, err = car.Create(car); err != nil {
 		http.Error(w, "Could Not Register Car!", http.StatusInternalServerError)
 		return

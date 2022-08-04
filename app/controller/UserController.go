@@ -38,6 +38,11 @@ func (uc *UserController) RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if model.IsExist(user) {
+		http.Error(w, "User Already Exists!", http.StatusBadRequest)
+		return
+	}
+
 	// TODO: Validation
 	if err = user.HashPassword(user.Password); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

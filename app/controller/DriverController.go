@@ -38,6 +38,11 @@ func (tsc *DriverController) RegisterDriver(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
+	if model.IsExist(driver) {
+		http.Error(w, "Driver Already Exists!", http.StatusBadRequest)
+		return
+	}
+
 	// TODO: Validation
 
 	if driver, err = driver.Create(driver); err != nil {

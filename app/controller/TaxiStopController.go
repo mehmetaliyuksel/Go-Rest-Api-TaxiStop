@@ -37,6 +37,11 @@ func (tsc *TaxiStopController) RegisterTaxiStop(w http.ResponseWriter, r *http.R
 		return
 	}
 
+	if model.IsExist(taxiStop) {
+		http.Error(w, "TaxiStop Already Exists!", http.StatusBadRequest)
+		return
+	}
+
 	// TODO: Validation
 
 	user, _ = user.FindById(uint(userId))

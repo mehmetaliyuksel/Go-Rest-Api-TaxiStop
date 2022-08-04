@@ -3,6 +3,7 @@ package model
 import (
 	"TaxiStop/app/database"
 	"gorm.io/gorm"
+	"reflect"
 	"time"
 )
 
@@ -35,4 +36,46 @@ func CreateTables() {
 			panic(err)
 		}
 	}
+}
+
+func IsExist(entity interface{}) bool {
+	var exists bool
+
+	identifierParam := getIdentifierParam(entity)
+	identifierParamValue := getValueOfField(entity, identifierParam)
+
+	err := db.Model(&entity).
+		Select("count(*) > 0").
+		Where(identifierParam+" = ?", identifierParamValue).
+		Find(&exists).
+		Error
+
+	if err != nil {
+		panic(err)
+	}
+
+	return exists
+
+}
+
+func getValueOfField(v interface{}, field string) string {
+	r := reflect.ValueOf(v).FieldByName(field)
+	return r.String()
+}
+
+func getIdentifierParam(entity interface{}) string {
+	var identifierParam string
+
+	switch reflect.TypeOf(entity).String() {
+	case "model.User":
+		identifierParam = "Email"
+	case "model.TaxiStop":
+		identifierParam = "TaxRegistrationNum"
+	case "model.Driver":
+		identifierParam = "LicenceSerialNum"
+	case "model.Car":
+		identifierParam = "PlateNumber"
+	}
+
+	return identifierParam
 }
