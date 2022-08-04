@@ -50,7 +50,7 @@ func (d *Driver) Create(driver Driver) (Driver, error) {
 
 func (d *Driver) GetAll() ([]Driver, error) {
 	var drivers []Driver
-	if err := db.Where("deleted = ?", false).Find(&drivers).Error; err != nil {
+	if err := db.Where("deleted = ?", false).Preload("Car").Find(&drivers).Error; err != nil {
 		return nil, err
 	}
 
@@ -59,7 +59,7 @@ func (d *Driver) GetAll() ([]Driver, error) {
 
 func (d *Driver) FindBy(id uint) (Driver, error) {
 	var driver Driver
-	if err := db.Where("deleted = ?", false).First(&driver, id).Error; err != nil {
+	if err := db.Where("deleted = ?", false).Preload("Car").First(&driver, id).Error; err != nil {
 		return driver, err
 	}
 
