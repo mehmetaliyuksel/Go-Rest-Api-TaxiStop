@@ -133,6 +133,29 @@ func (uc *UserController) GetUser(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func (uc *UserController) GetUserTaxiStops(w http.ResponseWriter, r *http.Request) {
+	var user model.User
+	var taxiStops []model.TaxiStop
+
+	userId, err := strconv.Atoi(mux.Vars(r)["id"])
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	user.ID = uint(userId)
+	taxiStops, err = user.FindAssociatedTaxiStops(user)
+
+	if err != nil {
+		http.Error(w, "Could Not Get TaxiStops of the User!", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+
+	_ = json.NewEncoder(w).Encode(taxiStops)
+}
+
 func (uc *UserController) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	var user model.User
 

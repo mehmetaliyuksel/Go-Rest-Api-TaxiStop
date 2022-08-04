@@ -91,6 +91,29 @@ func (tsc *TaxiStopController) GetTaxiStop(w http.ResponseWriter, r *http.Reques
 
 }
 
+func (tsc *TaxiStopController) GetTaxiStopUsers(w http.ResponseWriter, r *http.Request) {
+	var taxiStop model.TaxiStop
+	var users []model.User
+
+	taxiStopId, err := strconv.Atoi(mux.Vars(r)["id"])
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	taxiStop.ID = uint(taxiStopId)
+	users, err = taxiStop.FindAssociatedUsers(taxiStop)
+
+	if err != nil {
+		http.Error(w, "Could Not Get Users of the TaxiStop!", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+
+	_ = json.NewEncoder(w).Encode(users)
+}
+
 func (tsc *TaxiStopController) DeleteTaxiStop(w http.ResponseWriter, r *http.Request) {
 	var taxiStop model.TaxiStop
 

@@ -4,12 +4,13 @@ import "golang.org/x/crypto/bcrypt"
 
 type User struct {
 	Model    `gorm:"embedded"`
-	Username string `gorm:"not null" validate:"required" json:"username"`
-	Name     string `gorm:"not null" validate:"required" json:"name"`
-	Surname  string `gorm:"not null" validate:"required" json:"surname"`
-	Age      int    `json:"age"`
-	Email    string `gorm:"not null" validate:"required" json:"email"`
-	Password string `gorm:"not null" validate:"required" json:"password"`
+	Username string     `gorm:"not null" validate:"required" json:"Username"`
+	Name     string     `gorm:"not null" validate:"required" json:"Name"`
+	Surname  string     `gorm:"not null" validate:"required" json:"Surname"`
+	Age      int        `json:"Age"`
+	Email    string     `gorm:"not null" validate:"required" json:"Email"`
+	Password string     `gorm:"not null" validate:"required" json:"Password"`
+	TaxiStop []TaxiStop `gorm:"many2many:TaxiStop_User;" json:"TaxiStops"`
 }
 
 func (u *User) Create(user User) (User, error) {
@@ -46,14 +47,13 @@ func (u *User) FindByEmail(email string) (User, error) {
 	return user, nil
 }
 
-// ????
-func (u *User) FindByTaxiStop() ([]User, error) {
-	var users []User
-	if err := db.Model(&User{}).Preload("TaxiStop").Find(&users).Error; err != nil {
+func (u *User) FindAssociatedTaxiStops(user User) ([]TaxiStop, error) {
+	var taxiStops []TaxiStop
+	if err := db.Model(&user).Association("TaxiStop").Find(&taxiStops); err != nil {
 		return nil, err
 	}
 
-	return users, nil
+	return taxiStops, nil
 }
 
 func (u *User) Update(user User) error {

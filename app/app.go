@@ -45,6 +45,7 @@ func (a *App) run() {
 	insecureRouter.HandleFunc("/login", userController.Login).Methods("POST")
 	secureRouter.HandleFunc("/getUsers", userController.GetUsers).Methods("GET")
 	secureRouter.HandleFunc("/getUser/{id}", userController.GetUser).Methods("GET")
+	secureRouter.HandleFunc("/getUserTaxiStops/{id}", userController.GetUserTaxiStops).Methods("GET")
 	secureRouter.HandleFunc("/updateUser/{id}", userController.UpdateUser).Methods("PUT")
 	secureRouter.HandleFunc("/deleteUser/{id}", userController.DeleteUser).Methods("DELETE")
 
@@ -52,6 +53,7 @@ func (a *App) run() {
 	secureRouter.HandleFunc("/{id}/createTaxiStop", taxiStopController.RegisterTaxiStop).Methods("POST")
 	secureRouter.HandleFunc("/getTaxiStops", taxiStopController.GetTaxiStops).Methods("GET")
 	secureRouter.HandleFunc("/getTaxiStop/{id}", taxiStopController.GetTaxiStop).Methods("GET")
+	secureRouter.HandleFunc("/getTaxiStopUsers/{id}", taxiStopController.GetTaxiStopUsers).Methods("GET")
 	secureRouter.HandleFunc("/updateTaxiStop/{id}", taxiStopController.UpdateTaxiStop).Methods("PUT")
 	secureRouter.HandleFunc("/deleteTaxiStop/{id}", taxiStopController.DeleteTaxiStop).Methods("DELETE")
 

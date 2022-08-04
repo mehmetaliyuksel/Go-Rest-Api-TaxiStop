@@ -7,12 +7,12 @@ import (
 
 type Driver struct {
 	Model            `gorm:"embedded"`
-	Name             string `gorm:"not null" validate:"required" json:"name"`
-	Surname          string `gorm:"not null" validate:"required" json:"surname"`
+	Name             string `gorm:"not null" validate:"required" json:"Name"`
+	Surname          string `gorm:"not null" validate:"required" json:"Surname"`
 	Age              int    `json:"age"`
-	PhoneNumber      string `gorm:"not null" validate:"required" json:"phone_number"`
-	LicenceSerialNum string `gorm:"not null" validate:"required" json:"licence_serial_num"`
-	Car              []Car  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"cars"`
+	PhoneNumber      string `gorm:"not null" validate:"required" json:"PhoneNumber"`
+	LicenceSerialNum string `gorm:"not null" validate:"required" json:"LicenceSerialNum"`
+	Car              []Car  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"Cars"`
 	TaxiStopID       uint   `json:"taxiStopID"`
 }
 

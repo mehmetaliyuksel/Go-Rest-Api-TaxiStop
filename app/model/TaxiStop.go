@@ -3,13 +3,13 @@ package model
 type TaxiStop struct {
 	Model              `gorm:"embedded"`
 	Name               string   `gorm:"not null" validate:"required" json:"name"`
-	YearBuilt          int      `gorm:"not null" validate:"required" json:"year_built"`
-	PhoneNumber        string   `gorm:"not null" validate:"required" json:"phone_number"`
+	YearBuilt          int      `gorm:"not null" validate:"required" json:"YearBuilt"`
+	PhoneNumber        string   `gorm:"not null" validate:"required" json:"PhoneNumber"`
 	Address            string   `gorm:"not null" validate:"required" json:"address"`
-	TaxRegistrationNum string   `gorm:"not null" validate:"required" json:"tax_registration_num"`
-	NumberOfDrivers    int      `gorm:"not null" validate:"required" json:"number_of_drivers"`
-	Driver             []Driver `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"drivers"`
-	User               []User   `gorm:"many2many:TaxiStop_User;" json:"users"`
+	TaxRegistrationNum string   `gorm:"not null" validate:"required" json:"TaxRegistrationNum"`
+	NumberOfDrivers    int      `gorm:"not null" validate:"required" json:"NumberOfDrivers"`
+	Driver             []Driver `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"Drivers"`
+	User               []User   `gorm:"many2many:TaxiStop_User;" json:"Users"`
 }
 
 func (ts *TaxiStop) Create(taxiStop TaxiStop) (TaxiStop, error) {
@@ -38,13 +38,13 @@ func (ts *TaxiStop) FindBy(id uint) (TaxiStop, error) {
 }
 
 // ????
-func (ts *TaxiStop) FindByUser() ([]TaxiStop, error) {
-	var taxiStops []TaxiStop
-	if err := db.Model(&TaxiStop{}).Preload("User").Find(&taxiStops).Error; err != nil {
+func (ts *TaxiStop) FindAssociatedUsers(taxiStop TaxiStop) ([]User, error) {
+	var users []User
+	if err := db.Model(&taxiStop).Association("User").Find(&users); err != nil {
 		return nil, err
 	}
 
-	return taxiStops, nil
+	return users, nil
 }
 
 func (ts *TaxiStop) Update(taxiStop TaxiStop) error {

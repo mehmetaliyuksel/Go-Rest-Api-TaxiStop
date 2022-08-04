@@ -2,10 +2,10 @@ package model
 
 type Car struct {
 	Model            `gorm:"embedded"`
-	CarModelName     string `gorm:"not null" validate:"required" json:"car_model_name"`
-	PlateNumber      string `gorm:"not null" validate:"required" json:"plate_number"`
-	Color            string `gorm:"not null" validate:"required" json:"color"`
-	YearManufactured int    `gorm:"not null" validate:"required" json:"year_manufactured"`
+	CarModelName     string `gorm:"not null" validate:"required" json:"CarModelName"`
+	PlateNumber      string `gorm:"not null" validate:"required" json:"PlateNumber"`
+	Color            string `gorm:"not null" validate:"required" json:"Color"`
+	YearManufactured int    `gorm:"not null" validate:"required" json:"YearManufactured"`
 	DriverID         uint   `json:"driver_id"`
 }
 
